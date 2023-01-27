@@ -1,2 +1,8 @@
-docker build -t eval/worker . -f worker/Dockerfile.worker
-docker build -t eval/planner . -f planner/Dockerfile.planner
+cd planner/
+
+
+docker build -t planner -f Dockerfile .
+
+
+cd ../worker/
+docker build -t planner -f Dockerfile . 
