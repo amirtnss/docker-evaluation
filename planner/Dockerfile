@@ -1,9 +1,11 @@
 FROM node:16.14.0
 # Create app directory
 WORKDIR /app
+COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 8080
+ENV TASKS=20
+EXPOSE 3000
 CMD [ "node", "main.js"]
 #etant dans le dossier worker : docker build -t planner .
 
