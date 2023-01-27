@@ -9,8 +9,8 @@ const PLANNER =
     ? process.env.PLANNER
     : 'http://localhost:3000'
 const MULT =
-  process.env.MULT !== undefined ? parseBoolean(process.env.MULT) : true
-const ADD = process.env.ADD !== undefined ? parseBoolean(process.env.ADD) : true
+  process.env.MULT !== undefined ? JSON.parse(process.env.MULT) : true
+const ADD = process.env.ADD !== undefined ? JSON.parse(process.env.ADD) : true
 const app = express()
 const port = process.env.PORT || 8080
 const ADDRESS =
@@ -18,15 +18,26 @@ const ADDRESS =
     ? process.env.ADDRESS
     : 'http://localhost:' + port
 const randInt = (min, max) => Math.floor(Math.random() * (max - min)) + min
-const register = () =>
-  fetch(PLANNER + '/register', {
+
+const register = () =>{
+  const request = fetch(`${PLANNER}/register`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ url: ADDRESS, id }),
+    body: JSON.stringify({
+      url : `${ADDRESS}:${port}`, 
+      id : id
+    }),
+  }).then((res) => {
+    console.log("lol")
   })
+  .catch((err) => {
+    console.error(' failed', err.message)
+  })
+}
+
 let mult = false
 let add = false
 let task = {}
@@ -36,6 +47,9 @@ app.use(
     extended: true,
   })
 )
+
+
+
 
 if (MULT)
   app.post('/mult', (req, res) => {
@@ -85,7 +99,11 @@ app.get('/', (req, res) => {
   res.send('ready to work ' + id)
 })
 
+
+
 app.listen(port, () => {
-  // register()
+  register()
   console.log(`Worker ${id} listening at http://localhost:${port}`)
+  
+
 })
